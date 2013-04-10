@@ -5,8 +5,17 @@
 	<title> Remind! </title>
 </head>
 	
-	<script src="{{STATIC_URL}}core/js/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>        
+	<script src="{{STATIC_URL}}core/js/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"> </script>        
 	<link rel="stylesheet" href="{{STATIC_URL}}core/css/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+	<!-- Terrace skin -->
+	<link rel="stylesheet" href="{{STATIC_URL}}core/css/dhtmlxscheduler_dhx_terrace.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_dhx_terrace.js" type="text/javascript" charset="utf-8"> </script>
+
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_year_view.js" type="text/javascript" charset="utf-8"> </script>
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_tooltip.js" type="text/javascript" charset="utf-8"> </script>
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_agenda_view.js" type="text/javascript" charset="utf-8"> </script>
+	
 	
 <style type="text/css" media="screen">
 	html, body{
@@ -34,9 +43,8 @@
 <script type="text/javascript" charset="utf-8">
 	
 	function init() {
-		scheduler.config.xml_date="%Y-%m-%d %H:%i";
-		scheduler.init('scheduler_here',new Date(2011,0,25),"month");
-		
+		date_now = Date.now();
+
 		//define how text inside event bar looks
 		scheduler.templates.event_text=function(start,end,event){
 			return "Text:<b> "+event.text+"</b><br>"+"Descr."+event.details;
@@ -47,7 +55,20 @@
         	  return "past_event"; //then set special css class for it
 		}
 		
+		scheduler.config.full_day = true; // enable parameter to get full day event option on the lightbox form
+		scheduler.config.prevent_cache = true;
+		scheduler.config.xml_date="%Y-%m-%d %H:%i";
+		scheduler.init('scheduler_here', new Date(date_now),"month");
 		scheduler.load("/core/events.xml");
+		
+		
+		scheduler.config.multi_day = true;
+		scheduler.config.details_on_dblclick = true;
+		scheduler.config.details_on_create = true;
+		
+		scheduler.config.event_duration = 60; //specify event duration in munites for auto end time
+		scheduler.config.auto_end_date = true;
+		
 		
 		var dp = new dataProcessor("/core/dataprocessor.xml");
 		dp.setTransactionMode("POST",false)
@@ -64,9 +85,12 @@
 			<div class="dhx_cal_today_button"> </div>
 			<div class="dhx_cal_date"> </div>
 			
-			<div class="dhx_cal_tab" name="day_tab" style="right:204px;"> </div>
-			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"> </div>
-			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"> </div>
+			<div class="dhx_cal_tab dhx_cal_tab_first" name="day_tab" style="left:14px;"> </div>
+			<div class="dhx_cal_tab" name="week_tab" style="left:75px;"> </div>
+			<div class="dhx_cal_tab" name="month_tab" style="left:136px;"> </div>
+			<div class="dhx_cal_tab" name="year_tab" style="left:197px;"> </div>
+			<div class="dhx_cal_tab dhx_cal_tab_last" name="agenda_tab" style="left:258px;"> </div>
+			
 		</div>
 		<div class="dhx_cal_header">
 		</div>
