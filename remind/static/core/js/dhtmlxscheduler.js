@@ -113,7 +113,8 @@ scheduler.addEventNow=function(a,b,c){
 	d.start_date=d.start_date||f;
 	d.end_date=d.end_date||h;
 	d.text=d.text||this.locale.labels.new_event;
-	d.details=d.text||this.locale.labels.new_event;
+	d.details=d.details||this.locale.labels.new_event;
+	d.priority=d.priority||this.locale.labels.new_event;
 	d.id=this._drag_id=this.uid();
 	this._drag_mode="new-size";
 	this._loading=!0;

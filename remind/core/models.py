@@ -5,3 +5,4 @@ class Event(models.Model):
     end_date = models.DateTimeField()
     text = models.CharField(max_length=30)
     details = models.CharField(max_length=250)
+    priority = models.CharField(max_length=30)

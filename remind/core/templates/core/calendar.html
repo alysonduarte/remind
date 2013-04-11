@@ -44,6 +44,30 @@
 		color:purple !important;
 	}
 	
+	.dhx_cal_event.event_low div, .dhx_cal_event_line.event_low{
+        background-color: orange !important;
+        color: blue !important;
+    }
+    .dhx_cal_event_clear.event_low{
+        color: blue !important;
+    }
+
+    .dhx_cal_event.event_high div, .dhx_cal_event_line.event_high{
+        background-color: #add8e6 !important;
+        color: #8b0000 !important;
+    }
+    .dhx_cal_event_clear.event_high{
+        color: #8b0000 !important;
+    }
+
+    .dhx_cal_event.event_urgent div, .dhx_cal_event_line.event_urgent{
+        background-color: #e0ffff !important;
+        color: #008b8b !important;
+    }
+    .dhx_cal_event_clear.event_urgent{
+        color: #008b8b !important;
+    }
+	
 	.button_print{
 		position:absolute; 
 		right:472px; top:0px; 
@@ -73,34 +97,62 @@
 		date_now = Date.now();
 
 		scheduler.locale.labels.section_text = 'Name';
-		scheduler.locale.labels.section_textarea = 'Details';
+		scheduler.locale.labels.section_details = 'Details';
+		scheduler.locale.labels.section_priority = 'Priority';
+
+		var priority = [
+                { key: '', label: 'Normal' },
+                { key: 'low', label: 'Low' },
+                { key: 'high', label: 'High' },
+                { key: 'urgent', label: 'Urgent' },
+            ];
 
 		sections = scheduler.config.lightbox.sections;
 		sections.shift()
-		sections.unshift({name: 'textarea', height: 50, map_to: 'details', type: 'textarea', focus: true});
+		sections.unshift({ name: "priority", height:20, type:"select", options: priority, map_to:"priority" });
+		sections.unshift({ name: "details", height: 50, map_to: "details", type: "textarea" });
 		sections.unshift({ name: "text", height: 22, map_to: "text", type: "textarea", focus: true });
-		
+        
 //		scheduler.config.lightbox.sections = [
 //			{ name: "text", height: 22, map_to: "text", type: "textarea", focus: true },
 //			{ name: "textarea", height: 50, map_to: "text", type: "textarea", focus: true },
 //			{ name: "time", height: 22, type: "time", map_to: "auto"},
 //			{ name: "recurring", type: "recurring", map_to: "rec_type", button: "recurring"},
 //		];
-		
-		//define how text inside event bar looks
-		scheduler.templates.event_text=function(start,end,event,details){
+
+        //define how text inside event bar looks
+		scheduler.templates.event_text=function(start,end,event){
 			return "Name:<b> "+event.text+"</b><br>"+"Detail: "+event.details;
 		}
 		
-		scheduler.templates.event_class=function(start,end,event,details){
- 		   if (start < (new Date())) //if date in past
-        	  return "past_event"; //then set special css class for it
-		}
+		scheduler.templates.event_class=function(start,end,event){
+			if (start < (new Date())) //if date in past
+    			return "past_event"; //then set special css class for it
+
+    	  	if(event.priority) // if event has subject property then special class should be assigned
+	        	return "event_"+event.priority;
+
+		        //return ""; // default return
+		        /*  Note that it is possible to create more complex checks
+		            events with the same properties could have different CSS classes depending on the current view:
 		
+		            var mode = scheduler.getState().mode;
+		            if(mode == "day"){
+		                // custom logic here
+		            }
+		            else {
+		                // custom logic here
+		            }
+		        */
+		};
+        scheduler.config.cascade_event_display = true; // enable rendering, default value = false
+        scheduler.config.cascade_event_count = 4; // how many events events will be displayed in cascade style (max), default value = 4
+        scheduler.config.cascade_event_margin = 30; // margin between events, default value = 30
+        
 		scheduler.config.full_day = true; // enable parameter to get full day event option on the lightbox form
 		scheduler.config.prevent_cache = true;
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
-		scheduler.init('scheduler_here', new Date(date_now),"month");
+		
 		scheduler.load("/core/events.xml");
 		
 		scheduler.config.multi_day = true;
@@ -113,6 +165,9 @@
 		var dp = new dataProcessor("/core/dataprocessor.xml");
 		dp.setTransactionMode("POST",false)
 		dp.init(scheduler);
+		
+
+        scheduler.init('scheduler_here', new Date(date_now),"month");
 	}
 </script>
 

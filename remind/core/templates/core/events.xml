@@ -5,6 +5,7 @@
 		<end_date>{{event.end_date|date:"Y-m-d H:i"|escape}}</end_date>
 		<text><![CDATA[{{event.text|escape}}]]></text>
 		<details><![CDATA[{{event.details|escape}}]]></details>
+		<priority><![CDATA[{{event.priority|escape}}]]></priority>
 	</event>
 {% empty %}
 

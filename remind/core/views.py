@@ -55,6 +55,7 @@ def dataprocessorXML(request):
                 e.end_date = request.POST[id + '_end_date']
                 e.text = request.POST[id + '_text']
                 e.details = request.POST[id + '_details']
+                e.priority = request.POST[id + '_priority']
                 e.save()
                 response = {'type' : 'insert',
                             'sid': request.POST[id + '_id'],
@@ -66,6 +67,7 @@ def dataprocessorXML(request):
                 e.end_date = request.POST[id + '_end_date']
                 e.text = request.POST[id + '_text']
                 e.details = request.POST[id + '_details']
+                e.priority = request.POST[id + '_priority']
                 e.save()
                 response = {'type' : 'update',
                             'sid': e.id,
