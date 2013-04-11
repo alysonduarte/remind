@@ -1,0 +1,16 @@
+bin
+build
+include
+lib
+local
+Scripts
+.Python
+*.log
+*.pot
+*.pyc
+*.pco
+.project
+.pydevproject
+.settings
+Django*
+django*

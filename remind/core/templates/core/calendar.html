@@ -17,7 +17,8 @@
 	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_year_view.js" type="text/javascript" charset="utf-8"> </script> <!-- Year View -->
 	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_agenda_view.js" type="text/javascript" charset="utf-8"> </script> <!-- Agenda View -->
 	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_tooltip.js" type="text/javascript" charset="utf-8"> </script> <!-- Tooltip -->
-	
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_recurring.js" type="text/javascript" charset="utf-8"> </script> <!-- Recurring -->
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_pdf.js" type="text/javascript" charset="utf-8"> </script> <!-- PDF export -->
 	
 	
 	
@@ -41,7 +42,29 @@
     /*event with fixed time, in month view*/
 	.dhx_cal_event_clear.past_event{
 		color:purple !important;
-	}	
+	}
+	
+	.button_print{
+		position:absolute; 
+		right:472px; top:0px; 
+		color: #747473; 
+		font-size: 12px;
+    	font-weight: bold;
+    	background: none repeat scroll 0 0 transparent;
+    	height: 30px;
+    	line-height: 30px;
+    	cursor: pointer;
+    	text-align: center;
+    	border: 1px solid #CECECE;
+    	padding: 0 5px;
+    	text-decoration: none;
+    	width: 60px;
+		font-family: arial;
+		top: 14px;
+		white-space: nowrap;
+		-moz-user-select: -moz-none;
+		border-radius: 5px 5px 5px 5px;
+	}
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -52,15 +75,21 @@
 		scheduler.locale.labels.section_text = 'Name';
 		scheduler.locale.labels.section_textarea = 'Details';
 
-		scheduler.config.lightbox.sections = [
-			{ name: "text", height: 22, map_to: "text", type: "textarea", focus: true },
-			{ name: "textarea", height: 50, map_to: "text", type: "textarea", focus: true },
-			{ name: "time", height: 22, type: "time", map_to: "auto"}
-		];
-
+		sections = scheduler.config.lightbox.sections;
+		sections.shift()
+		sections.unshift({name: 'textarea', height: 50, map_to: 'details', type: 'textarea', focus: true});
+		sections.unshift({ name: "text", height: 22, map_to: "text", type: "textarea", focus: true });
+		
+//		scheduler.config.lightbox.sections = [
+//			{ name: "text", height: 22, map_to: "text", type: "textarea", focus: true },
+//			{ name: "textarea", height: 50, map_to: "text", type: "textarea", focus: true },
+//			{ name: "time", height: 22, type: "time", map_to: "auto"},
+//			{ name: "recurring", type: "recurring", map_to: "rec_type", button: "recurring"},
+//		];
+		
 		//define how text inside event bar looks
 		scheduler.templates.event_text=function(start,end,event,details){
-			return "Text:<b> "+event.text+"</b><br>"+"Detail:"+event.details;
+			return "Name:<b> "+event.text+"</b><br>"+"Detail: "+event.details;
 		}
 		
 		scheduler.templates.event_class=function(start,end,event,details){
@@ -95,16 +124,22 @@
 			<div class="dhx_cal_today_button"> </div>
 			<div class="dhx_cal_date"> </div>
 			
+			<input class="button_print" type="button" value="Print" onclick="scheduler.toPDF('http://dhtmlxscheduler.appspot.com/export/pdf')">
+			
 			<div class="dhx_cal_tab dhx_cal_tab_first" name="day_tab" style="left:14px;"> </div>
 			<div class="dhx_cal_tab" name="week_tab" style="left:75px;"> </div>
-			<div class="dhx_cal_tab" name="month_tab" style="left:136px;"> </div>
-			<div class="dhx_cal_tab" name="year_tab" style="left:197px;"> </div>
-			<div class="dhx_cal_tab dhx_cal_tab_last" name="agenda_tab" style="left:258px;"> </div>
+			<div class="dhx_cal_tab dhx_cal_tab_last" name="month_tab" style="left:136px;"> </div>
+			
+			<div class="dhx_cal_tab" name="year_tab" style="left:211px;"> </div>
+			<div class="dhx_cal_tab" name="agenda_tab" style="left:297px;"> </div>
 			
 		</div>
+		
 		<div class="dhx_cal_header">
 		</div>
+		
 		<div class="dhx_cal_data">
-		</div>		
+		</div>
+			
 	</div>
 </body>

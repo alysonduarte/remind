@@ -24,7 +24,7 @@ def dataprocessorXML(request):
     u'1295982759946_end_date': [u'2011-01-11 00:05'],
     u'1295982759946_text': [u'New event'],
     u'1295982759946_start_date': [u'2013-01-11 00:00'],
-    u'1295982759946_details': [u'New event'],
+    u'1295982759946_details': [u'Detail'],
     u'1295982759946_!nativeeditor_status': [u'inserted']}>
 
     Response Data format:
