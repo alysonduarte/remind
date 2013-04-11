@@ -1,6 +1,6 @@
 # coding: UTF-8
 
-from django import forms
+'''from django import forms
 from remindcalendar.core.models import RecipeEvent
 
 class EventForm(forms.ModelForm):
@@ -39,5 +39,5 @@ class EventForm(forms.ModelForm):
         return self.rec_type['extra'] if self.rec_type.has_key("extra") else None
         
     class Meta:
-        model = RecipeEvent
+        model = RecipeEvent'''
     

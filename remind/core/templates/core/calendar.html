@@ -5,6 +5,7 @@
 	<title> Remind! </title>
 </head>
 	
+	<!-- Defalt import -->
 	<script src="{{STATIC_URL}}core/js/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"> </script>        
 	<link rel="stylesheet" href="{{STATIC_URL}}core/css/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
@@ -12,9 +13,12 @@
 	<link rel="stylesheet" href="{{STATIC_URL}}core/css/dhtmlxscheduler_dhx_terrace.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_dhx_terrace.js" type="text/javascript" charset="utf-8"> </script>
 
-	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_year_view.js" type="text/javascript" charset="utf-8"> </script>
-	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_tooltip.js" type="text/javascript" charset="utf-8"> </script>
-	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_agenda_view.js" type="text/javascript" charset="utf-8"> </script>
+	<!-- Extensor -->
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_year_view.js" type="text/javascript" charset="utf-8"> </script> <!-- Year View -->
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_agenda_view.js" type="text/javascript" charset="utf-8"> </script> <!-- Agenda View -->
+	<script src="{{STATIC_URL}}core/js/ext/dhtmlxscheduler_tooltip.js" type="text/javascript" charset="utf-8"> </script> <!-- Tooltip -->
+	
+	
 	
 	
 <style type="text/css" media="screen">
@@ -45,12 +49,21 @@
 	function init() {
 		date_now = Date.now();
 
+		scheduler.locale.labels.section_text = 'Name';
+		scheduler.locale.labels.section_textarea = 'Details';
+
+		scheduler.config.lightbox.sections = [
+			{ name: "text", height: 22, map_to: "text", type: "textarea", focus: true },
+			{ name: "textarea", height: 50, map_to: "text", type: "textarea", focus: true },
+			{ name: "time", height: 22, type: "time", map_to: "auto"}
+		];
+
 		//define how text inside event bar looks
-		scheduler.templates.event_text=function(start,end,event){
-			return "Text:<b> "+event.text+"</b><br>"+"Descr."+event.details;
+		scheduler.templates.event_text=function(start,end,event,details){
+			return "Text:<b> "+event.text+"</b><br>"+"Detail:"+event.details;
 		}
 		
-		scheduler.templates.event_class=function(start,end,event){
+		scheduler.templates.event_class=function(start,end,event,details){
  		   if (start < (new Date())) //if date in past
         	  return "past_event"; //then set special css class for it
 		}
@@ -61,7 +74,6 @@
 		scheduler.init('scheduler_here', new Date(date_now),"month");
 		scheduler.load("/core/events.xml");
 		
-		
 		scheduler.config.multi_day = true;
 		scheduler.config.details_on_dblclick = true;
 		scheduler.config.details_on_create = true;
@@ -69,11 +81,9 @@
 		scheduler.config.event_duration = 60; //specify event duration in munites for auto end time
 		scheduler.config.auto_end_date = true;
 		
-		
 		var dp = new dataProcessor("/core/dataprocessor.xml");
 		dp.setTransactionMode("POST",false)
 		dp.init(scheduler);
-
 	}
 </script>
 

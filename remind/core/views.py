@@ -6,46 +6,40 @@ from remind.libs.dateutil.rrule import *
 
 @csrf_exempt
 def eventsXML(request):
-    """
+    '''
     For now, return the whole event DB.
-    """
+    '''
     eventList = Event.objects.all()
-
+    
     return render_to_response('core/events.xml',
                               {'eventList' : eventList,},
                                 mimetype="application/xhtml+xml")
 @csrf_exempt
 def dataprocessorXML(request):
-    """
+    '''
     QueryDict data format:
     <QueryDict:{
     u'ids': [u'1295982759946'],
     u'1295982759946_id': [u'1295982759946'],
     u'1295982759946_end_date': [u'2011-01-11 00:05'],
     u'1295982759946_text': [u'New event'],
-    u'1295982759946_start_date': [u'2011-01-11 00:00'],
-    u'1295982759946_!nativeeditor_status': [u'inserted']
-    }>
+    u'1295982759946_start_date': [u'2013-01-11 00:00'],
+    u'1295982759946_details': [u'New event'],
+    u'1295982759946_!nativeeditor_status': [u'inserted']}>
 
     Response Data format:
-
     <data>
        <action type="some" sid="r2" tid="r2" />
-       <action type="some" sid="r3" tid="r3" />
     </data>
 
-
-    type
-    the type of the operation (update, insert, delete, invalid, error);
-    sid
-    the original row ID (the same as gr_id);
-    tid
-    the ID of the row after the operation (may be the same as gr_id,
-    or some different one - it can be used during a new row adding,
-    when a temporary ID, created on the client-side, is replaced with the ID,
-    taken from the DB or by any other business rule).
-
-    """
+    type: the type of the operation (update, insert, delete, invalid, error);
+    sid:  the original row ID (the same as gr_id);
+    tid:  the ID of the row after the operation (may be the same as gr_id,
+    or some different one - it can be used during a new row adding, when a
+    temporary ID, created on the client-side, is replaced with the ID, taken
+    from the DB or by any other business rule).
+    '''
+    
     responseList = []
     
     if request.method == 'POST':
@@ -54,12 +48,13 @@ def dataprocessorXML(request):
         
         for id in idList:
             command = request.POST[id + '_!nativeeditor_status']
+            
             if command == 'inserted':
                 e = Event()
                 e.start_date = request.POST[id + '_start_date']
                 e.end_date = request.POST[id + '_end_date']
                 e.text = request.POST[id + '_text']
-                e.details = 'Bogus for now'
+                e.details = request.POST[id + '_details']
                 e.save()
                 response = {'type' : 'insert',
                             'sid': request.POST[id + '_id'],
@@ -70,7 +65,7 @@ def dataprocessorXML(request):
                 e.start_date = request.POST[id + '_start_date']
                 e.end_date = request.POST[id + '_end_date']
                 e.text = request.POST[id + '_text']
-                e.details = 'Bogus for now'
+                e.details = request.POST[id + '_details']
                 e.save()
                 response = {'type' : 'update',
                             'sid': e.id,
@@ -92,7 +87,7 @@ def dataprocessorXML(request):
             responseList.append(response)
             
     return render_to_response('core/dataprocessor.xml',
-                              {"responseList": responseList}, 
+                              {"responseList": responseList},
                               mimetype="application/xhtml+xml")
 
 @csrf_exempt
