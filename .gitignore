@@ -9,8 +9,6 @@ Scripts
 *.pot
 *.pyc
 *.pco
-.project
-.pydevproject
 .settings
 Django*
 django*
