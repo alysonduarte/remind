@@ -29,3 +29,5 @@ git ls-files "*.vim" | while read File; do
 done
 
 echo "Now run: git commit -a -m \"Bumped version to v$Version\""
+
+git commit -a -m "Bumped version to v$Version"
