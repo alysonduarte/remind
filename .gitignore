@@ -10,5 +10,8 @@ Scripts
 *.pyc
 *.pco
 .settings
+.project
+.pydevproject
+.gitignore~
 Django*
 django*
